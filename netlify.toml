@@ -1,0 +1,9 @@
+# Static site: one self-contained HTML file ("Game PAI.html"), no framework,
+# no package manager and no dependencies.
+#
+# The build step only copies the page into a clean "dist" folder as index.html,
+# so it loads at the site root, and keeps the original file name working too.
+# This also keeps repo files like netlify.toml out of the published site.
+[build]
+  command = "mkdir -p dist && cp 'Game PAI.html' dist/index.html && cp 'Game PAI.html' 'dist/Game PAI.html'"
+  publish = "dist"
