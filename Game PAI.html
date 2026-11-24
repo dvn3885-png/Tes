@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tebak Kata & Istilah PAI - Kelas 12 SMA</title>
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-dark: #115e59;
+            --primary-light: #ccfbf1;
+            --accent: #d97706;
+            --accent-hover: #b45309;
+            --bg: #f0fdf4;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 720px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(15, 118, 110, 0.12);
+            overflow: hidden;
+            border: 1px solid rgba(15, 118, 110, 0.15);
+        }
+
+        /* Header */
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 24px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .badge-info {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.18);
+            padding: 5px 14px;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header h1 {
+            font-size: 1.55rem;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8fafc;
+            padding: 14px 30px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+        }
+
+        .level-badge {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+
+        .score-box {
+            color: var(--accent);
+            font-size: 1.05rem;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: #e2e8f0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* Content Area */
+        .content {
+            padding: 30px;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.35s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Start Screen */
+        .rules-box {
+            background: #f8fafc;
+            border-left: 4px solid var(--primary);
+            padding: 18px 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 20px 0;
+        }
+
+        .rules-box h3 {
+            margin-bottom: 10px;
+            color: var(--primary-dark);
+            font-size: 1.05rem;
+        }
+
+        .rules-box ul {
+            padding-left: 20px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        /* Game Area */
+        .game-type-tag {
+            display: inline-block;
+            background: #fef3c7;
+            color: #92400e;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: var(--text-main);
+            margin-bottom: 18px;
+            font-weight: 500;
+        }
+
+        .auto-clue {
+            background: #f1f5f9;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.92rem;
+            color: #475569;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Visual / Puzzle Containers */
+        .visual-box {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0 20px;
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 14px;
+            border: 1px dashed #cbd5e1;
+        }
+
+        .word-slots {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .slot-box {
+            width: 42px;
+            height: 48px;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            background: #f0fdfa;
+            text-transform: uppercase;
+        }
+
+        .slot-box.missing {
+            background: #fffbeb;
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .slot-space {
+            width: 18px;
+        }
+
+        .scrambled-letters {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin: 18px 0;
+        }
+
+        .letter-tile {
+            background: var(--primary);
+            color: white;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 3px 0 var(--primary-dark);
+            user-select: none;
+        }
+
+        /* Input & Buttons */
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 14px 18px;
+            font-size: 1.05rem;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            outline: none;
+            transition: border-color 0.2s;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary);
+        }
+
+        .btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-hint {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+            padding: 10px 16px;
+            font-size: 0.9rem;
+        }
+
+        .btn-hint:hover:not(:disabled) {
+            background: #fde68a;
+        }
+
+        .btn-full {
+            width: 100%;
+            font-size: 1.1rem;
+            padding: 16px;
+        }
+
+        .helper-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .extra-hint-text {
+            margin-top: 14px;
+            padding: 12px 16px;
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            border-radius: 10px;
+            color: #92400e;
+            font-size: 0.92rem;
+            display: none;
+        }
+
+        /* Feedback Box */
+        .feedback-box {
+            margin-top: 20px;
+            padding: 18px;
+            border-radius: 12px;
+            display: none;
+            line-height: 1.5;
+        }
+
+        .feedback-box.correct {
+            background: #dcfce7;
+            border: 1px solid #86efac;
+            color: #166534;
+        }
+
+        .feedback-box.wrong {
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            color: #991b1b;
+        }
+
+        .feedback-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        /* Result Screen */
+        .result-card {
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .final-score {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 24px 0;
+        }
+
+        .stat-item {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .stat-label {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        @media (max-width: 540px) {
+            .input-group { flex-direction: column; }
+            .slot-box, .letter-tile { width: 34px; height: 40px; font-size: 1.1rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <span class="badge-info">SMA KELAS 12 • PENDIDIKAN AGAMA ISLAM</span>
+        <h1>Tebak Kata & Istilah Sejarah Islam</h1>
+        <p>Materi: Persebaran Agama Islam di Berbagai Benua</p>
+    </div>
+
+    <div id="statusBar" class="status-bar" style="display: none;">
+        <div>
+            <span id="questionCounter">Tantangan 1/10</span>
+            <span id="levelBadge" class="level-badge" style="margin-left: 8px;">Level 1: Pemula</span>
+        </div>
+        <div class="score-box">Skor: <span id="scoreDisplay">0</span></div>
+    </div>
+    <div id="progressContainer" class="progress-container" style="display: none;">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <div class="content">
+        <!-- LAYAR MULAI -->
+        <div id="startScreen" class="screen active">
+            <h2>Selamat Datang, Peserta Didik!</h2>
+            <p style="color: var(--text-muted); margin-top: 8px; line-height: 1.6;">
+                Uji pemahamanmu mengenai tokoh, wilayah, peradaban, dan jalur masuknya Islam di Benua Asia, Afrika, Eropa, Amerika, hingga Australia melalui 10 tantangan interaktif.
+            </p>
+
+            <div class="rules-box">
+                <h3>Aturan Main & Penilaian:</h3>
+                <ul>
+                    <li>Terdapat <strong>10 tantangan</strong> yang terbagi dalam <strong>3 level bertahap</strong> (Pemula, Menengah, Mahir).</li>
+                    <li>Mencakup 5 variasi permainan: Tebak Kata, Tebak Istilah, Melengkapi Huruf, Susun Huruf Acak, dan Tebak Gambar/Ilustrasi.</li>
+                    <li>Setiap jawaban benar bernilai <strong>+100 poin</strong>.</li>
+                    <li>Kamu bisa menggunakan tombol <strong>Bantuan Petunjuk</strong> jika kesulitan (mengurangi <strong>-30 poin</strong> dari perolehan soal tersebut).</li>
+                </ul>
+            </div>
+
+            <button class="btn btn-primary btn-full" onclick="startGame()">Mulai Tantangan Sekarang</button>
+        </div>
+
+        <!-- LAYAR PERMAINAN -->
+        <div id="gameScreen" class="screen">
+            <span id="gameTypeTag" class="game-type-tag">Jenis Permainan</span>
+            
+            <div id="questionText" class="question-text"></div>
+
+            <!-- Wadah Dinamis (Gambar / Huruf Hilang / Huruf Acak) -->
+            <div id="dynamicMedia"></div>
+
+            <!-- Petunjuk Otomatis -->
+            <div class="auto-clue">
+                <span>💡</span>
+                <span id="autoClueText">Petunjuk otomatis akan muncul di sini.</span>
+            </div>
+
+            <!-- Input Jawaban -->
+            <div class="input-group">
+                <input type="text" id="answerInput" placeholder="Ketik jawabanmu di sini..." autocomplete="off" onkeypress="handleKeyPress(event)">
+                <button id="submitBtn" class="btn btn-primary" onclick="checkAnswer()">Periksa Jawaban</button>
+            </div>
+
+            <!-- Tombol Bantuan & Lewati -->
+            <div class="helper-bar">
+                <button id="hintBtn" class="btn btn-hint" onclick="useExtraHint()">
+                    🔍 Bantuan Tambahan (-30 Poin)
+                </button>
+                <span id="pointsInfo" style="font-size: 0.85rem; color: var(--text-muted);">Potensi poin soal ini: 100</span>
+            </div>
+
+            <!-- Teks Bantuan Tambahan -->
+            <div id="extraHintBox" class="extra-hint-text"></div>
+
+            <!-- Umpan Balik Jawaban -->
+            <div id="feedbackBox" class="feedback-box">
+                <span id="feedbackTitle" class="feedback-title"></span>
+                <p id="feedbackDesc"></p>
+                <button id="nextBtn" class="btn btn-primary" style="margin-top: 14px;" onclick="nextQuestion()">Lanjut Tantangan Berikutnya ➔</button>
+            </div>
+        </div>
+
+        <!-- LAYAR HASIL AKHIR -->
+        <div id="resultScreen" class="screen">
+            <div class="result-card">
+                <span class="badge-info" style="background: var(--primary-light); color: var(--primary-dark);">PERMAINAN SELESAI</span>
+                <h2 id="predicateTitle" style="margin-top: 8px;">Luar Biasa!</h2>
+                <div id="finalScoreDisplay" class="final-score">0</div>
+                <p style="color: var(--text-muted);">Total Skor Akhir Kamu</p>
+
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div id="correctCount" class="stat-value" style="color: var(--success);">0/10</div>
+                        <div class="stat-label">Jawaban Benar</div>
+                    </div>
+                    <div class="stat-item">
+                        <div id="hintUsedCount" class="stat-value" style="color: var(--accent);">0</div>
+                        <div class="stat-label">Bantuan Dipakai</div>
+                    </div>
+                    <div class="stat-item">
+                        <div id="accuracyDisplay" class="stat-value">0%</div>
+                        <div class="stat-label">Akurasi</div>
+                    </div>
+                </div>
+
+                <p id="closingMessage" style="margin-bottom: 24px; line-height: 1.6; color: var(--text-main);"></p>
+
+                <button class="btn btn-primary btn-full" onclick="startGame()">🔄 Main Kembali</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Bank Soal PAI Kelas 12: Persebaran Agama Islam di Berbagai Benua (10 Tantangan)
+    const questionBank = [
+        // LEVEL 1: PEMULA (Soal 1 - 3)
+        {
+            level: "Level 1: Pemula",
+            type: "1. Menebak Kata Berdasarkan Petunjuk",
+            question: "Benua pertama di luar Jazirah Arab yang menjadi pintu masuk dakwah Islam pada masa Khalifah Umar bin Khattab melalui panglima Amr bin Ash.",
+            answer: "AFRIKA",
+            autoClue: "Terdiri dari 6 huruf. Negara pertama yang dibebaskan di benua ini adalah Mesir.",
+            extraHint: "Huruf pertamanya adalah A dan huruf terakhirnya juga A (A _ _ _ _ A).",
+            explanation: "Benar! Mesir di Benua Afrika menjadi wilayah pertama di luar Asia yang menerima Islam pada masa Khalifah Umar bin Khattab (640 M) di bawah pimpinan Amr bin Ash."
+        },
+        {
+            level: "Level 1: Pemula",
+            type: "3. Melengkapi Huruf yang Hilang",
+            question: "Panglima perang dari Dinasti Umayyah yang memimpin penaklukan Semenanjung Iberia (Spanyol) pada tahun 711 M hingga namanya diabadikan menjadi nama selat.",
+            answer: "THARIQ",
+            pattern: ["T", "", "A", "R", "", "Q"],
+            autoClue: "Nama lengkapnya adalah _____ bin Ziyad.",
+            extraHint: "Huruf kedua adalah H dan huruf kelima adalah I.",
+            explanation: "Tepat sekali! Thariq bin Ziyad menyeberangi selat yang kemudian dinamakan Jabal Thariq (Gibraltar) dan membuka pintu peradaban Islam di Eropa."
+        },
+        {
+            level: "Level 1: Pemula",
+            type: "2. Menebak Istilah Berdasarkan Definisi",
+            question: "Sebutan untuk wilayah Semenanjung Iberia (Spanyol dan Portugal) pada masa kejayaan peradaban Islam di Benua Eropa antara abad ke-8 hingga ke-15 M.",
+            answer: "ANDALUSIA",
+            autoClue: "Terdiri dari 9 huruf. Kota Cordoba dan Granada menjadi pusat ilmu pengetahuan di wilayah ini.",
+            extraHint: "Diawali dengan kata ANDALUS dan diakhiri huruf I-A.",
+            explanation: "Benar! Andalusia merupakan mercusuar ilmu pengetahuan dan peradaban Islam di Eropa selama hampir delapan abad."
+        },
+
+        // LEVEL 2: MENENGAH (Soal 4 - 7)
+        {
+            level: "Level 2: Menengah",
+            type: "4. Menyusun Huruf Acak Menjadi Kata",
+            question: "Susun huruf acak berikut menjadi nama jalur perdagangan kuno yang berperan besar dalam menyebarkan agama Islam dari Timur Tengah menuju Asia Tengah hingga Tiongkok!",
+            answer: "SUTRA",
+            scrambled: ["R", "A", "S", "U", "T"],
+            autoClue: "Jalur _____ (5 huruf), dinamai dari komoditas kain mewah asal Tiongkok.",
+            extraHint: "Kata ini dimulai dengan huruf S dan diakhiri huruf A.",
+            explanation: "Benar! Jalur Sutra (Silk Road) tidak hanya menjadi rute perdagangan, tetapi juga jalur dakwah para saudagar dan ulama Muslim ke Asia Tengah dan Tiongkok."
+        },
+        {
+            level: "Level 2: Menengah",
+            type: "5. Menebak Jawaban Berdasarkan Gambar / Ilustrasi",
+            question: "Perhatikan ilustrasi arsitektur bersejarah berikut. Bangunan ikonik di Granada, Spanyol ini merupakan bukti puncak kejayaan seni arsitektur Islam di Benua Eropa. Apakah nama istana/benteng tersebut?",
+            answer: "ALHAMBRA",
+            svg: `
+                <svg width="280" height="145" viewBox="0 0 280 145" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="280" height="145" rx="10" fill="#fef3c7"/>
+                    <!-- Langit & Bukit -->
+                    <path d="M0 115 Q70 85 140 105 T280 95 L280 145 L0 145 Z" fill="#15803d"/>
+                    <!-- Dinding Benteng Merah (Al-Hamra) -->
+                    <rect x="45" y="55" width="190" height="65" fill="#b91c1c" rx="2"/>
+                    <!-- Menara Kiri & Kanan -->
+                    <rect x="35" y="38" width="28" height="82" fill="#991b1b"/>
+                    <rect x="217" y="38" width="28" height="82" fill="#991b1b"/>
+                    <!-- Kubah Tengah -->
+                    <path d="M115 55 Q140 20 165 55 Z" fill="#d97706"/>
+                    <!-- Lengkungan Khas Moorish -->
+                    <path d="M75 120 L75 88 Q85 75 95 88 L95 120 Z" fill="#fef3c7"/>
+                    <path d="M110 120 L110 88 Q120 75 130 88 L130 120 Z" fill="#fef3c7"/>
+                    <path d="M150 120 L150 88 Q160 75 170 88 L170 120 Z" fill="#fef3c7"/>
+                    <path d="M185 120 L185 88 Q195 75 205 88 L205 120 Z" fill="#fef3c7"/>
+                    <text x="140" y="137" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">ISTANA BENTENG MERAH - GRANADA</text>
+                </svg>
+            `,
+            autoClue: "Nama istana ini berasal dari bahasa Arab 'Al-Hamra' yang berarti 'yang merah' (8 huruf).",
+            extraHint: "Dimulai dengan awalan AL- dan diakhiri -BRA.",
+            explanation: "Tepat! Istana Alhambra (Qal'at al-Hamra) di Granada dibangun oleh Dinasti Nasrid dan menjadi mahakarya arsitektur Islam di Eropa."
+        },
+        {
+            level: "Level 2: Menengah",
+            type: "1. Menebak Kata Berdasarkan Petunjuk",
+            question: "Negara di kawasan Eropa Tenggara (Semenanjung Balkan) yang memiliki penduduk mayoritas Muslim terbesar di Eropa dan pernah menjadi bagian dari Kekhalifahan Turki Utsmani.",
+            answer: "BOSNIA",
+            autoClue: "Sering disebut bersama pasangannya: _____ dan Herzegovina (6 huruf).",
+            extraHint: "Ibu kotanya adalah Sarajevo.",
+            explanation: "Benar! Bosnia (Bosnia dan Herzegovina) memiliki populasi Muslim yang besar dan warisan budaya Islam Utsmani yang kuat di Eropa."
+        },
+        {
+            level: "Level 2: Menengah",
+            type: "3. Melengkapi Huruf yang Hilang",
+            question: "Pelaut Muslim asal Sulawesi Selatan (Bugis-Makassar) yang berlayar mencari teripang sejak abad ke-17 dan menjalin hubungan damai dengan suku Aborigin di Australia Utara.",
+            answer: "MAKASSAR",
+            pattern: ["M", "A", "", "A", "S", "", "A", "R"],
+            autoClue: "Para pelaut ini berasal dari Sulawesi Selatan (8 huruf).",
+            extraHint: "Huruf yang hilang adalah K dan S.",
+            explanation: "Tepat! Para pelaut Makassar berlayar ke Marege (Arnhem Land, Australia Utara) jauh sebelum kedatangan bangsa Eropa, memperkenalkan budaya dan kosakata Islam kepada suku Aborigin."
+        },
+
+        // LEVEL 3: MAHIR (Soal 8 - 10)
+        {
+            level: "Level 3: Mahir",
+            type: "2. Menebak Istilah Berdasarkan Definisi",
+            question: "Tokoh Muslim Afrika-Amerika (bernama asli Malcolm Little) yang berjuang membela hak-hak sipil di Amerika Serikat dan memeluk Islam Sunni yang inklusif setelah menunaikan ibadah haji.",
+            answer: "MALCOLM X",
+            autoClue: "Gunakan spasi sebelum huruf terakhirnya (7 huruf + 1 spasi). Nama Muslimnya El-Hajj Malik El-Shabazz.",
+            extraHint: "Ketik nama panggilannya yang terkenal diikuti huruf X.",
+            explanation: "Benar! Malcolm X merupakan tokoh penting dalam perkembangan Islam di Amerika Serikat pada abad ke-20 yang menyuarakan kesetaraan rasial dalam Islam."
+        },
+        {
+            level: "Level 3: Mahir",
+            type: "4. Menyusun Huruf Acak Menjadi Kata",
+            question: "Susun huruf acak berikut menjadi nama kerajaan Islam di Afrika Barat pada abad ke-14 yang terkenal dengan kota Timbuktu sebagai pusat keilmuan dan penguasanya Mansa Musa!",
+            answer: "MALI",
+            scrambled: ["L", "I", "A", "M"],
+            autoClue: "Kerajaan Islam kaya raya di Afrika Barat (4 huruf).",
+            extraHint: "Diawali huruf M dan diakhiri huruf I.",
+            explanation: "Tepat sekali! Kesultanan Mali mencapai puncak kejayaan pada masa Mansa Musa dan menjadikan Universitas Sankore di Timbuktu pusat ilmu dunia Islam."
+        },
+        {
+            level: "Level 3: Mahir",
+            type: "5. Menebak Jawaban Berdasarkan Gambar / Ilustrasi",
+            question: "Perhatikan ilustrasi masjid bersejarah yang dibangun oleh para penunggang unta asal Afghanistan (Cameleers) pada tahun 1888 di kota Adelaide. Ini adalah masjid permanen tertua di benua manakah?",
+            answer: "AUSTRALIA",
+            svg: `
+                <svg width="280" height="145" viewBox="0 0 280 145" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="280" height="145" rx="10" fill="#e0f2fe"/>
+                    <!-- Tanah Gurun / Outback -->
+                    <rect x="0" y="112" width="280" height="33" fill="#eab308"/>
+                    <!-- Badan Masjid Adelaide -->
+                    <rect x="85" y="65" width="110" height="47" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+                    <!-- 4 Menara Tinggi Khas Afghan Cameleers -->
+                    <rect x="75" y="25" width="10" height="87" fill="#0f766e"/>
+                    <polygon points="75,25 80,14 85,25" fill="#d97706"/>
+                    <rect x="195" y="25" width="10" height="87" fill="#0f766e"/>
+                    <polygon points="195,25 200,14 205,25" fill="#d97706"/>
+                    <!-- Pintu Lengkungan -->
+                    <path d="M128 112 L128 85 Q140 72 152 85 L152 112 Z" fill="#0f766e"/>
+                    <text x="140" y="133" font-size="11" font-weight="bold" fill="#1e293b" text-anchor="middle">CENTRAL ADELAIDE MOSQUE (1888)</text>
+                </svg>
+            `,
+            autoClue: "Benua terkecil di dunia yang terletak di sebelah selatan Indonesia (9 huruf).",
+            extraHint: "Diawali dengan AUS dan diakhiri -LIA.",
+            explanation: "Sempurna! Central Adelaide Mosque di Australia dibangun oleh para penunggang unta Muslim asal Afghanistan yang berjasa membuka jalur transportasi pedalaman Australia."
+        }
+    ];
+
+    // Variabel State Permainan
+    let currentIndex = 0;
+    let score = 0;
+    let correctAnswers = 0;
+    let totalHintsUsed = 0;
+    let hintUsedCurrent = false;
+    let isAnswered = false;
+
+    // Elemen DOM
+    const startScreen = document.getElementById('startScreen');
+    const gameScreen = document.getElementById('gameScreen');
+    const resultScreen = document.getElementById('resultScreen');
+    const statusBar = document.getElementById('statusBar');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+
+    function startGame() {
+        currentIndex = 0;
+        score = 0;
+        correctAnswers = 0;
+        totalHintsUsed = 0;
+
+        startScreen.classList.remove('active');
+        resultScreen.classList.remove('active');
+        gameScreen.classList.add('active');
+        statusBar.style.display = 'flex';
+        progressContainer.style.display = 'block';
+
+        updateStatusBar();
+        loadQuestion();
+    }
+
+    function updateStatusBar() {
+        document.getElementById('questionCounter').textContent = `Tantangan ${currentIndex + 1}/${questionBank.length}`;
+        document.getElementById('levelBadge').textContent = questionBank[currentIndex].level;
+        document.getElementById('scoreDisplay').textContent = score;
+        const progressPercent = ((currentIndex) / questionBank.length) * 100;
+        progressBar.style.width = `${progressPercent}%`;
+    }
+
+    function loadQuestion() {
+        const q = questionBank[currentIndex];
+        hintUsedCurrent = false;
+        isAnswered = false;
+
+        updateStatusBar();
+
+        // Set teks soal & petunjuk
+        document.getElementById('gameTypeTag').textContent = q.type;
+        document.getElementById('questionText').textContent = q.question;
+        document.getElementById('autoClueText').textContent = q.autoClue;
+
+        // Reset input & tombol
+        const inputEl = document.getElementById('answerInput');
+        inputEl.value = '';
+        inputEl.disabled = false;
+        inputEl.focus();
+
+        document.getElementById('submitBtn').disabled = false;
+        document.getElementById('hintBtn').disabled = false;
+        document.getElementById('pointsInfo').textContent = "Potensi poin soal ini: 100";
+        
+        const extraHintBox = document.getElementById('extraHintBox');
+        extraHintBox.style.display = 'none';
+        extraHintBox.textContent = '';
+
+        const feedbackBox = document.getElementById('feedbackBox');
+        feedbackBox.style.display = 'none';
+        feedbackBox.className = 'feedback-box';
+
+        // Render media dinamis sesuai jenis soal
+        const mediaContainer = document.getElementById('dynamicMedia');
+        mediaContainer.innerHTML = '';
+
+        if (q.pattern) {
+            // Tipe 3: Melengkapi huruf yang hilang
+            const slotsDiv = document.createElement('div');
+            slotsDiv.className = 'word-slots';
+            q.pattern.forEach(char => {
+                const box = document.createElement('div');
+                if (char === "") {
+                    box.className = 'slot-box missing';
+                    box.textContent = '?';
+                } else {
+                    box.className = 'slot-box';
+                    box.textContent = char;
+                }
+                slotsDiv.appendChild(box);
+            });
+            mediaContainer.appendChild(slotsDiv);
+        } else if (q.scrambled) {
+            // Tipe 4: Menyusun huruf acak
+            const scramDiv = document.createElement('div');
+            scramDiv.className = 'scrambled-letters';
+            q.scrambled.forEach(letter => {
+                const tile = document.createElement('div');
+                tile.className = 'letter-tile';
+                tile.textContent = letter;
+                scramDiv.appendChild(tile);
+            });
+            mediaContainer.appendChild(scramDiv);
+        } else if (q.svg) {
+            // Tipe 5: Gambar / Ilustrasi SVG
+            const visualDiv = document.createElement('div');
+            visualDiv.className = 'visual-box';
+            visualDiv.innerHTML = q.svg;
+            mediaContainer.appendChild(visualDiv);
+        }
+    }
+
+    function useExtraHint() {
+        if (hintUsedCurrent || isAnswered) return;
+
+        const q = questionBank[currentIndex];
+        hintUsedCurrent = true;
+        totalHintsUsed++;
+
+        document.getElementById('hintBtn').disabled = true;
+        document.getElementById('pointsInfo').textContent = "Potensi poin soal ini: 70 (Bantuan dipakai)";
+
+        const extraHintBox = document.getElementById('extraHintBox');
+        extraHintBox.innerHTML = `<strong>Bantuan Tambahan:</strong> ${q.extraHint}`;
+        extraHintBox.style.display = 'block';
+    }
+
+    function handleKeyPress(e) {
+        if (e.key === 'Enter') {
+            if (!isAnswered) {
+                checkAnswer();
+            } else {
+                nextQuestion();
+            }
+        }
+    }
+
+    function checkAnswer() {
+        if (isAnswered) return;
+
+        const inputEl = document.getElementById('answerInput');
+        const userAns = inputEl.value.trim().toUpperCase().replace(/\s+/g, ' ');
+        
+        if (!userAns) {
+            inputEl.focus();
+            return;
+        }
+
+        isAnswered = true;
+        inputEl.disabled = true;
+        document.getElementById('submitBtn').disabled = true;
+        document.getElementById('hintBtn').disabled = true;
+
+        const q = questionBank[currentIndex];
+        const feedbackBox = document.getElementById('feedbackBox');
+        const feedbackTitle = document.getElementById('feedbackTitle');
+        const feedbackDesc = document.getElementById('feedbackDesc');
+        const nextBtn = document.getElementById('nextBtn');
+
+        // Normalisasi jawaban (menangani spasi opsional seperti MALCOLMX vs MALCOLM X)
+        const normalizedUser = userAns.replace(/\s/g, '');
+        const normalizedTarget = q.answer.replace(/\s/g, '');
+
+        if (normalizedUser === normalizedTarget) {
+            const earned = hintUsedCurrent ? 70 : 100;
+            score += earned;
+            correctAnswers++;
+            document.getElementById('scoreDisplay').textContent = score;
+
+            feedbackBox.className = 'feedback-box correct';
+            feedbackTitle.textContent = `✅ Jawaban Benar! (+${earned} Poin)`;
+            feedbackDesc.textContent = q.explanation;
+        } else {
+            feedbackBox.className = 'feedback-box wrong';
+            feedbackTitle.textContent = `❌ Kurang Tepat! Jawaban yang benar adalah: ${q.answer}`;
+            feedbackDesc.textContent = q.explanation;
+        }
+
+        nextBtn.textContent = (currentIndex === questionBank.length - 1) 
+            ? "Lihat Hasil Akhir 🏆" 
+            : "Lanjut Tantangan Berikutnya ➔";
+
+        feedbackBox.style.display = 'block';
+    }
+
+    function nextQuestion() {
+        currentIndex++;
+        if (currentIndex < questionBank.length) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        progressBar.style.width = '100%';
+        gameScreen.classList.remove('active');
+        statusBar.style.display = 'none';
+        resultScreen.classList.add('active');
+
+        const accuracy = Math.round((correctAnswers / questionBank.length) * 100);
+        document.getElementById('finalScoreDisplay').textContent = score;
+        document.getElementById('correctCount').textContent = `${correctAnswers}/${questionBank.length}`;
+        document.getElementById('hintUsedCount').textContent = totalHintsUsed;
+        document.getElementById('accuracyDisplay').textContent = `${accuracy}%`;
+
+        let title = "";
+        let msg = "";
+
+        if (score >= 850) {
+            title = "Mumtaz! Sang Sejarawan Peradaban Islam 🌟";
+            msg = "Pemahamanmu terhadap sejarah dan kosakata persebaran Islam di berbagai benua sangat mendalam. Pertahankan semangat belajarmu!";
+        } else if (score >= 600) {
+            title = "Bagus Sekali! Terus Tingkatkan 👏";
+            msg = "Kamu sudah menguasai sebagian besar konsep penting penyebaran Islam di dunia. Ulangi permainan untuk meraih skor sempurna!";
+        } else {
+            title = "Tetap Semangat Belajar! 📚";
+            msg = "Perjalanan sejarah Islam di dunia sangat luas dan menarik. Coba mainkan kembali dan perhatikan petunjuk di setiap soal untuk memperdalam pemahamanmu.";
+        }
+
+        document.getElementById('predicateTitle').textContent = title;
+        document.getElementById('closingMessage').textContent = msg;
+    }
+</script>
+
+</body>
+</html>
